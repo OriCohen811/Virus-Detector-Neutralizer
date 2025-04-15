@@ -52,15 +52,8 @@ Neutralization: If a match is found, the first byte of the virus in the file is 
 
 🛠️ Build & Run
 --------------
-without makefile:
+
 ```terminal
-gcc -g -Wall -o virusDetector virusDetector.c
 chmod u+x infected
-./virusDetector signatures.bin
-```
-with makefile: 
-```terminal
-make
-chmod u+x infected
-./virusDetector signatures.bin
+./AntiVirus signatures-L
 ```
