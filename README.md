@@ -1,44 +1,66 @@
-# Virus Detector & Neutralizer (C, Linux)
+🛡️ Virus Detector and Neutralizer
+--------------------------------
 
-## Overview
-This project is a simple anti-virus simulator developed in C for Linux environments. It allows the user to:
+This project simulates a simple anti-virus tool written in C, designed to:
 
 - Load virus signatures from a binary file.
-- Print loaded signatures.
-- Scan a suspected binary file for viruses based on the loaded signatures.
-- Neutralize detected viruses by patching their code with a `RET` instruction (`0xC3`).
+- Detect known viruses in a suspected binary file.
+- Neutralize viruses by automatically patching the infected binary.
 
-The neutralization assumes viruses are self-contained functions and can be safely skipped by forcing a return.
+🔍 Functionality
+----------------
 
-## How It Works
-1. **Signature File**: A binary file containing virus records. Each virus includes:
-   - Signature size (2 bytes)
-   - Virus name (16 bytes)
-   - Signature data (N bytes)
+1. **Load Signatures**  
+   Parses a binary file containing known virus signatures and stores them in a linked list.
 
-2. **Infected File**: A suspected binary file to scan for known virus signatures.
+2. **Print Signatures**  
+   Displays all loaded virus signatures including name, size, and hex representation.
 
-3. **Detection**: The program scans a 10KB buffer from the infected file and compares each byte window to known signatures.
+3. **Detect Viruses**  
+   Scans a given binary file (up to 10KB) for known virus patterns and prints location, name, and size if found.
 
-4. **Neutralization**: If a match is found, the first byte of the virus in the file is replaced with `0xC3` (RET in x86), making the virus return immediately.
+4. **Fix File**  
+   Neutralizes detected viruses by replacing the first byte of the virus code in the infected file with a `RET` instruction (`0xC3`), effectively making the virus code return immediately without executing.
 
-## Usage
-Compile and run:
+5. **Quit**  
+   Cleanly exits the program.
+
+📄 Magic Word
+-------------
+
+The virus signature file **must begin with a 4-byte magic word**:  
+- `"VIRL"` or `"VIRB"`  
+
+This magic word serves as a validation check to ensure the file is indeed a virus signature database. If the magic word is not found at the beginning of the file, the program will reject it and stop processing.
+
+How It Works
+-------------
+
+Signature File: A binary file containing virus records. Each virus includes:
+
+Signature size (2 bytes)
+
+Virus name (16 bytes)
+
+Signature data (N bytes)
+
+Infected File: A suspected binary file to scan for known virus signatures.
+
+Detection: The program scans a 10KB buffer from the infected file and compares each byte window to known signatures.
+
+Neutralization: If a match is found, the first byte of the virus in the file is replaced with 0xC3 (RET in x86), making the virus return immediately.
+
+🛠️ Build & Run
+--------------
+without makefile:
+```terminal
+gcc -g -Wall -o virusDetector virusDetector.c
+chmod u+x infected
+./virusDetector signatures.bin
+```
+with makefile: 
 ```terminal
 make
-./virusDetector [signatures-file (optional now or in '1' option as below)]
+chmod u+x infected
+./virusDetector signatures.bin
 ```
-
-### Menu Options
-1. **Load signatures**: Manually load a signatures file.
-2. **Print signatures**: Display loaded virus signatures.
-3. **Detect viruses**: Scan a file for known viruses.
-4. **Fix file**: Automatically neutralize detected viruses in the suspected file.
-5. **Quit**: Exit the program.
-
-> When using "Fix file", make sure the program was launched with the infected file as a command-line argument.
-
-## Dependencies
-- `gcc` (C compiler)
-- Linux environment
-- `hexedit` (optional, for manual testing)
