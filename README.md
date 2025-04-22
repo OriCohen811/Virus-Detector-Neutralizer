@@ -55,5 +55,6 @@ Neutralization: If a match is found, the first byte of the virus in the file is 
 
 ```terminal
 chmod u+x infected
-./AntiVirus signatures-L
+make
+./AntiVirus
 ```
